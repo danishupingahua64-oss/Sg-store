@@ -1,0 +1,909 @@
+,<!DOCTYPE html>
+<html lang="es" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>sg store - Cuentas de Streaming, Software y Laptops</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        sg: {
+                            50: '#f5f3ff',
+                            500: '#8b5cf6',
+                            600: '#7c3aed',
+                            700: '#6d28d9',
+                            900: '#4c1d95',
+                        },
+                        darkBg: '#0b0f19',
+                        cardBg: '#131b2e'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #0b0f19; color: #f8fafc; }
+        
+        /* Custom Keyframe Animations for Floating Elements */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(3deg); }
+        }
+        @keyframes floatFast {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-22px) rotate(-4deg); }
+        }
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        @keyframes screenGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(139, 92, 246, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(139, 92, 246, 0.8); }
+        }
+        .animate-float-1 { animation: floatSlow 6s ease-in-out infinite; }
+        .animate-float-2 { animation: floatFast 4.5s ease-in-out infinite; }
+        .animate-float-3 { animation: floatSlow 7s ease-in-out infinite 1s; }
+        .animate-glow { animation: pulseGlow 5s ease-in-out infinite; }
+        .screen-glow { animation: screenGlow 3s ease-in-out infinite; }
+
+        /* Netflix-style Intro Animation Overlay */
+        @keyframes netflixZoom {
+            0% { transform: scale(0.3); opacity: 0; filter: brightness(2); }
+            50% { transform: scale(1.2); opacity: 1; filter: brightness(1.2); }
+            100% { transform: scale(25); opacity: 0; filter: brightness(1); }
+        }
+        @keyframes redBarExpand {
+            0% { width: 0%; opacity: 1; }
+            50% { width: 100%; opacity: 1; }
+            100% { width: 100%; opacity: 0; }
+        }
+        .netflix-animating {
+            animation: netflixZoom 1.4s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+        .netflix-bar {
+            animation: redBarExpand 1.4s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0b0f19; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #334155; }
+    </style>
+</head>
+<body class="bg-[#0b0f19] text-slate-100 antialiased selection:bg-purple-500 selection:text-white">
+
+    <!-- Netflix-style Intro Animation Overlay (Triggered on product selection) -->
+    <div id="netflixIntro" class="fixed inset-0 z-50 bg-black flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-300">
+        <div class="relative flex items-center justify-center">
+            <!-- Expanding Red Glowing Bar behind logo -->
+            <div id="netflixBar" class="absolute h-3 bg-purple-600 rounded-full opacity-0"></div>
+            <!-- Logo Zooming -->
+            <div id="netflixLogo" class="w-32 h-32 rounded-3xl bg-gradient-to-tr from-purple-600 to-indigo-600 flex items-center justify-center text-white shadow-2xl shadow-purple-600/80 opacity-0 transform scale-50">
+                <span class="text-6xl font-black tracking-tighter">sg</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Header / Navbar -->
+    <header class="sticky top-0 z-40 bg-[#0b0f19]/80 backdrop-blur-md border-b border-slate-800/80 transition-all shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+            <!-- Logo sg store -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-600 via-indigo-600 to-pink-500 flex items-center justify-center text-white shadow-lg shadow-purple-600/30 group-hover:scale-105 transition-transform">
+                    <i class="fa-solid fa-laptop-code text-lg"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-2xl font-black tracking-tighter bg-gradient-to-r from-white via-slate-200 to-purple-400 bg-clip-text text-transparent">sg store</span>
+                    <span class="text-[10px] tracking-widest text-purple-400 font-semibold uppercase -mt-1">Streaming & Tech</span>
+                </div>
+            </a>
+
+            <!-- Search Bar (Desktop) -->
+            <div class="hidden md:flex flex-1 max-w-md relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                </span>
+                <input type="text" id="searchInput" placeholder="Buscar Netflix, Office 365, Laptops Gamer, Combos..." class="w-full pl-10 pr-4 py-2.5 bg-[#131b2e] border border-slate-800 rounded-full text-sm text-slate-200 placeholder-slate-500 focus:bg-[#1a233a] focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20 transition-all">
+            </div>
+
+            <!-- Nav Actions -->
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSearchMobile()" class="md:hidden p-2.5 text-slate-400 hover:text-purple-400 hover:bg-slate-800/50 rounded-full transition-colors">
+                    <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                </button>
+                <button onclick="toggleCartDrawer()" class="relative p-2.5 bg-[#131b2e] text-slate-200 hover:bg-purple-950/40 hover:text-purple-300 rounded-full transition-colors flex items-center gap-2 px-4 border border-slate-800 shadow-sm">
+                    <i class="fa-solid fa-cart-shopping text-base text-purple-400"></i>
+                    <span class="text-sm font-semibold hidden sm:inline">Carrito</span>
+                    <span id="cartCountBadge" class="absolute -top-1.5 -right-1.5 bg-purple-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-bold shadow-md shadow-purple-600/40 scale-100 transition-transform">0</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Search Bar Expanded -->
+        <div id="mobileSearch" class="hidden md:hidden px-4 pb-3 pt-1 border-t border-slate-800 bg-[#0b0f19]">
+            <div class="relative">
+                <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
+                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                </span>
+                <input type="text" id="searchMobileInput" placeholder="Buscar producto o servicio..." class="w-full pl-10 pr-4 py-2 bg-[#131b2e] border border-slate-800 rounded-full text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-purple-500/20">
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section with PC & Laptops + Streaming Animation Showcase -->
+    <section class="relative overflow-hidden bg-gradient-to-b from-[#0b0f19] via-[#10172a] to-[#0b0f19] py-20 lg:py-28">
+        <!-- Glowing Background Orbs -->
+        <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-purple-600/15 rounded-full blur-3xl animate-glow pointer-events-none"></div>
+        <div class="absolute top-1/3 right-10 w-[300px] h-[300px] bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Hero Text -->
+                <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/30 text-purple-300 text-xs font-semibold uppercase tracking-wider shadow-inner">
+                        <i class="fa-solid fa-microchip text-purple-400"></i> Streaming, Software y Laptops Garantizadas
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
+                        Todo tu entretenimiento y tecnología en <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-indigo-400 bg-clip-text text-transparent">sg store</span>
+                    </h1>
+                    <p class="text-slate-400 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                        Cuentas de streaming oficiales, licencias de software originales y laptops de alto rendimiento con envío inmediato a todo el país.
+                    </p>
+                    <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                        <a href="#productos" class="px-8 py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-2xl shadow-lg shadow-purple-600/30 transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                            <span>Ver Catálogo Completo</span>
+                            <i class="fa-solid fa-arrow-down text-sm"></i>
+                        </a>
+                        <a href="https://wa.me/51962081190?text=Hola%20sg%20store,%20quiero%20más%20información%20sobre%20sus%20productos" target="_blank" class="px-8 py-4 bg-[#131b2e] hover:bg-[#1a233a] text-slate-200 border border-slate-700/80 font-semibold rounded-2xl transition-all flex items-center gap-2">
+                            <i class="fa-brands fa-whatsapp text-emerald-400 text-lg"></i>
+                            <span>Asesoría WhatsApp (962081190)</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Animated PC & Laptops + Streaming Showcase -->
+                <div class="lg:col-span-5 relative flex items-center justify-center">
+                    <div class="relative w-full max-w-md h-[420px] flex items-center justify-center">
+                        
+                        <!-- Central Laptop Animation Showcase -->
+                        <div class="w-64 h-44 rounded-2xl bg-gradient-to-br from-[#1e293b] to-[#0f172a] p-3 border border-purple-500/40 shadow-2xl screen-glow z-20 flex flex-col justify-between">
+                            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                <div class="flex items-center gap-1.5">
+                                    <div class="w-2.5 h-2.5 rounded-full bg-red-500"></div>
+                                    <div class="w-2.5 h-2.5 rounded-full bg-amber-500"></div>
+                                    <div class="w-2.5 h-2.5 rounded-full bg-emerald-500"></div>
+                                </div>
+                                <span class="text-[10px] font-bold text-purple-400">sg store OS</span>
+                            </div>
+                            <div class="flex flex-col items-center justify-center py-2 text-center">
+                                <i class="fa-solid fa-laptop text-3xl text-purple-400 mb-1 animate-pulse"></i>
+                                <span class="text-xs font-bold text-white">Laptops Gamer & Oficina</span>
+                                <span class="text-[9px] text-slate-400">Core i7 / i9 / Ryzen 7</span>
+                            </div>
+                            <div class="bg-slate-900 rounded-lg py-1 px-2 text-center text-[9px] text-emerald-400 font-semibold border border-slate-800">
+                                ● Stock Físico Disponible
+                            </div>
+                        </div>
+
+                        <!-- Floating Card 1: Streaming (Netflix/Disney) -->
+                        <div class="absolute -top-2 left-0 bg-[#131b2e]/95 border border-purple-500/30 backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float-1 z-30 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-red-600/20 text-red-500 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-tv"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Streaming 4K</h4>
+                                <span class="text-[10px] text-emerald-400 font-semibold">● Entrega Inmediata</span>
+                            </div>
+                        </div>
+
+                        <!-- Floating Card 2: PC Hardware & CPU -->
+                        <div class="absolute bottom-4 right-0 bg-[#131b2e]/95 border border-blue-500/30 backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float-2 z-30 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-desktop"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">PCs de Escritorio</h4>
+                                <span class="text-[10px] text-purple-400 font-semibold">● Garantía 1 Año</span>
+                            </div>
+                        </div>
+
+                        <!-- Floating Card 3: Software Original -->
+                        <div class="absolute top-16 -right-4 bg-[#131b2e]/95 border border-indigo-500/30 backdrop-blur-md rounded-2xl p-3.5 shadow-xl animate-float-3 z-30 flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center text-xl">
+                                <i class="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-xs font-bold text-white">Software Oficial</h4>
+                                <span class="text-[10px] text-emerald-400 font-semibold">● Windows & Office</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Navigation Section -->
+    <section id="categorias" class="py-8 bg-[#0b0f19] border-y border-slate-800/80">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-6">
+                <h2 class="text-xl sm:text-2xl font-bold text-white tracking-tight">Explora por Categorías sg store</h2>
+                <p class="text-slate-400 text-xs mt-0.5">Encuentra streaming, software o equipos tecnológicos especializados</p>
+            </div>
+            <div id="categoryContainer" class="flex items-center justify-center gap-3 flex-wrap">
+                <!-- Dynamically populated categories -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Catalog Section -->
+    <section id="productos" class="py-16 bg-[#0b0f19]">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 gap-4">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Catálogo General sg store</h2>
+                    <p class="text-slate-400 text-sm mt-1">Selecciona cualquier producto para ver su animación exclusiva</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="text-sm font-medium text-slate-400">Ordenar por:</span>
+                    <select id="sortSelect" onchange="sortProducts()" class="bg-[#131b2e] border border-slate-800 text-slate-200 text-sm rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500/20 shadow-sm">
+                        <option value="featured">Más Destacados</option>
+                        <option value="low-high">Precio: Menor a Mayor</option>
+                        <option value="high-low">Precio: Mayor a Menor</option>
+                        <option value="name">Nombre (A-Z)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Product Grid -->
+            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Products rendered via JavaScript -->
+            </div>
+
+            <!-- Empty State for Search -->
+            <div id="noResults" class="hidden text-center py-20">
+                <div class="w-16 h-16 bg-[#131b2e] text-slate-500 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl border border-slate-800">
+                    <i class="fa-solid fa-face-frown"></i>
+                </div>
+                <h3 class="text-lg font-bold text-slate-300">No encontramos resultados</h3>
+                <p class="text-slate-500 text-sm mt-1">Prueba buscando otra laptop, software o servicio de streaming.</p>
+                <button onclick="resetFilters()" class="mt-4 px-6 py-2.5 bg-purple-600 text-white rounded-xl text-sm font-semibold shadow-md hover:bg-purple-500 transition-all">Ver todo el catálogo</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shopping Cart Drawer Overlay -->
+    <div id="cartOverlay" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden transition-opacity opacity-0" onclick="toggleCartDrawer()"></div>
+
+    <!-- Shopping Cart Drawer Panel -->
+    <div id="cartDrawer" class="fixed inset-y-0 right-0 max-w-md w-full bg-[#131b2e] border-l border-slate-800 shadow-2xl z-50 transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <!-- Drawer Header -->
+        <div class="p-6 border-b border-slate-800 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-purple-950/60 text-purple-400 border border-purple-500/30 flex items-center justify-center">
+                    <i class="fa-solid fa-cart-shopping text-base"></i>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold text-white">Tu Carrito sg</h3>
+                    <p id="cartItemCountSubtitle" class="text-xs text-slate-400">0 productos</p>
+                </div>
+            </div>
+            <button onclick="toggleCartDrawer()" class="p-2 text-slate-400 hover:text-white hover:bg-slate-800 rounded-full transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Drawer Body (Items list) -->
+        <div id="cartItemsList" class="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-slate-800/80">
+            <!-- Items injected by JS -->
+        </div>
+
+        <!-- Drawer Footer (Summary & Checkout) -->
+        <div id="cartFooter" class="p-6 border-t border-slate-800 bg-[#0b0f19] space-y-4">
+            <div class="space-y-2">
+                <div class="flex justify-between text-sm text-slate-400">
+                    <span>Subtotal</span>
+                    <span id="cartSubtotal" class="font-semibold text-slate-200">$0.00</span>
+                </div>
+                <div class="flex justify-between text-sm text-slate-400">
+                    <span>Envío / Activación</span>
+                    <span class="font-semibold text-emerald-400">Gratis (Inmediato)</span>
+                </div>
+                <div class="flex justify-between text-base font-bold text-white pt-2 border-t border-slate-800">
+                    <span>Total a Pagar</span>
+                    <span id="cartTotal" class="text-xl text-purple-400">$0.00</span>
+                </div>
+            </div>
+            <button onclick="openCheckoutModal()" id="checkoutBtn" class="w-full py-4 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-bold rounded-2xl shadow-lg shadow-purple-600/30 transition-all flex items-center justify-center gap-2">
+                <span>Finalizar Pedido sg store</span>
+                <i class="fa-solid fa-arrow-right text-sm"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div id="checkoutModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden">
+        <div class="bg-[#131b2e] border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative transform transition-all">
+            <button onclick="closeCheckoutModal()" class="absolute top-6 right-6 text-slate-400 hover:text-white p-2 rounded-full hover:bg-slate-800 transition-colors">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-purple-950/60 text-purple-400 border border-purple-500/30 flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-bolt"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-white">Completar Pedido sg store</h3>
+                    <p class="text-xs text-slate-400">Se enviará tu pedido por WhatsApp al asesor (962081190)</p>
+                </div>
+            </div>
+
+            <form id="checkoutForm" onsubmit="handleCheckoutSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Nombre Completo</label>
+                    <input type="text" id="clientName" required placeholder="Ej. Carlos Mendoza" class="w-full px-4 py-3 bg-[#0b0f19] border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-600 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Número de WhatsApp</label>
+                    <input type="tel" id="clientPhone" required placeholder="Ej. +51 987654321" class="w-full px-4 py-3 bg-[#0b0f19] border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-600 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Dirección de Envío (Solo para Laptops / PCs)</label>
+                    <input type="text" id="clientAddress" placeholder="Av. Principal 123, Ciudad (Opcional si solo es streaming)" class="w-full px-4 py-3 bg-[#0b0f19] border border-slate-800 rounded-xl text-sm text-slate-200 placeholder-slate-600 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase mb-1">Método de Pago</label>
+                    <select id="clientPayment" class="w-full px-4 py-3 bg-[#0b0f19] border border-slate-800 rounded-xl text-sm text-slate-200 focus:border-purple-500 focus:outline-none">
+                        <option>Yape / Plin / Transferencia BCP</option>
+                        <option>Tarjeta de Crédito / Débito</option>
+                        <option>Pago Contra Entrega (Solo Laptops - Ciertas zonas)</option>
+                    </select>
+                </div>
+
+                <div class="pt-4">
+                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold rounded-2xl shadow-lg shadow-emerald-600/30 transition-all flex items-center justify-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Enviar pedido por WhatsApp (<span id="modalTotalAmount">$0.00</span>)</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Success Toast Notification -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 z-50 transform translate-y-28 opacity-0 transition-all duration-300 max-w-sm bg-[#131b2e] border border-purple-500/40 text-white p-4 rounded-2xl shadow-2xl flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-purple-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
+            <i class="fa-solid fa-check text-lg"></i>
+        </div>
+        <div>
+            <h4 class="font-bold text-sm text-white">¡Abriendo WhatsApp sg store!</h4>
+            <p id="toastMessage" class="text-xs text-slate-400 mt-0.5">Conectando con tu asesor 962081190...</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-[#070a12] text-slate-500 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6 text-center md:text-left">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 rounded-lg bg-purple-600 flex items-center justify-center text-white font-bold">
+                    <i class="fa-solid fa-laptop-code text-xs"></i>
+                </div>
+                <span class="text-base font-bold text-white tracking-tight">sg store Oficial</span>
+            </div>
+            <p class="text-xs text-slate-500">© 2026 sg store. Streaming, Software y Laptops con garantía total. Asesor: 962081190</p>
+            <div class="flex items-center gap-4 text-lg">
+                <a href="https://wa.me/51962081190" target="_blank" class="hover:text-purple-400 transition-colors"><i class="fa-brands fa-whatsapp"></i></a>
+                <a href="#" class="hover:text-purple-400 transition-colors"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="hover:text-purple-400 transition-colors"><i class="fa-brands fa-telegram"></i></a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Organized Product Catalog for sg store
+        const products = [
+            // Cuentas de Streaming
+            {
+                id: 1,
+                name: "Netflix Cuenta Completa UHD 4K",
+                category: "Streaming",
+                price: 12.99,
+                badge: "Más Vendido",
+                image: "https://images.unsplash.com/photo-1574375927938-d5a98e8ffe85?auto=format&fit=crop&w=600&q=80",
+                description: "Cuenta Ultra HD 4 pantallas simultáneas, propia con garantía de 30 días.",
+                featured: true
+            },
+            {
+                id: 2,
+                name: "Disney+ / Max (HBO) Combo Stream",
+                category: "Streaming",
+                price: 9.50,
+                badge: "Oferta 2 en 1",
+                image: "https://images.unsplash.com/photo-1616530940355-351fabd9524b?auto=format&fit=crop&w=600&q=80",
+                description: "Acceso completo a plataformas líderes en series, películas y estrenos.",
+                featured: true
+            },
+            {
+                id: 3,
+                name: "Spotify Premium (1 Mes - Tu Cuenta)",
+                category: "Streaming",
+                price: 4.99,
+                badge: "Renovable",
+                image: "https://images.unsplash.com/photo-1614680376593-902f749f7ffc?auto=format&fit=crop&w=600&q=80",
+                description: "Música sin interrupciones y alta calidad aplicada a tu cuenta personal.",
+                featured: false
+            },
+
+            // Laptops y Equipos PC
+            {
+                id: 4,
+                name: "Laptop Gamer ASUS TUF / Core i7 16GB RAM",
+                category: "Laptops y PCs",
+                price: 849.00,
+                badge: "Alta Gama",
+                image: "https://images.unsplash.com/photo-1603302576837-37561b2e2302?auto=format&fit=crop&w=600&q=80",
+                description: "Tarjeta gráfica RTX 4060, pantalla 144Hz, ideal para gaming y diseño avanzado.",
+                featured: true
+            },
+            {
+                id: 5,
+                name: "Laptop HP Ultrabook 15.6'' Ryzen 5 512GB SSD",
+                category: "Laptops y PCs",
+                price: 489.00,
+                badge: "Oficina y Estudio",
+                image: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?auto=format&fit=crop&w=600&q=80",
+                description: "Diseño elegante, ligera, batería de larga duración y Windows 11 Pro instalado.",
+                featured: true
+            },
+            {
+                id: 6,
+                name: "PC Escritorio Completa Core i5 (Monitor 22'' Incluido)",
+                category: "Laptops y PCs",
+                price: 399.00,
+                badge: "Kit Completo",
+                image: "https://images.unsplash.com/photo-1587831990711-23ca6441447b?auto=format&fit=crop&w=600&q=80",
+                description: "CPU Core i5, 16GB RAM, SSD 480GB, monitor LED de 22 pulgadas, teclado y mouse RGB.",
+                featured: false
+            },
+
+            // Software y Licencias
+            {
+                id: 7,
+                name: "Licencia Original Windows 11 Pro (Permanente)",
+                category: "Software",
+                price: 15.00,
+                badge: "Original 100%",
+                image: "https://images.unsplash.com/photo-1629654297299-c8506221ca97?auto=format&fit=crop&w=600&q=80",
+                description: "Clave de activación digital oficial para 1 PC con actualizaciones automáticas.",
+                featured: false
+            },
+            {
+                id: 8,
+                name: "Microsoft Office 365 ProPlus (5 Dispositivos)",
+                category: "Software",
+                price: 10.99,
+                badge: "Word / Excel / PPT",
+                image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80",
+                description: "Word, Excel, PowerPoint, Outlook y 1TB de almacenamiento cloud OneDrive.",
+                featured: true
+            }
+        ];
+
+        // Application State
+        let cart = [];
+        let selectedCategory = 'Todos';
+        let searchQuery = '';
+        let currentSort = 'featured';
+
+        // Initialize App on DOM Load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCategories();
+            renderProducts();
+            updateCartBadge();
+
+            // Search listeners
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                renderProducts();
+            });
+            document.getElementById('searchMobileInput').addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                renderProducts();
+            });
+        });
+
+        // Toggle Mobile Search
+        function toggleSearchMobile() {
+            const mobileSearch = document.getElementById('mobileSearch');
+            mobileSearch.classList.toggle('hidden');
+            if(!mobileSearch.classList.contains('hidden')) {
+                document.getElementById('searchMobileInput').focus();
+            }
+        }
+
+        // Render Categories
+        function renderCategories() {
+            const categories = ['Todos', ...new Set(products.map(p => p.category))];
+            const container = document.getElementById('categoryContainer');
+            container.innerHTML = '';
+
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                const isActive = selectedCategory === cat;
+                btn.className = `px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
+                    isActive 
+                    ? 'bg-purple-600 text-white shadow-md shadow-purple-600/40 border border-purple-400/40' 
+                    : 'bg-[#131b2e] text-slate-300 border border-slate-800 hover:border-purple-500/40 hover:bg-[#1a233a]'
+                }`;
+                btn.textContent = cat;
+                btn.onclick = () => {
+                    selectedCategory = cat;
+                    renderCategories();
+                    renderProducts();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        // Render Products Grid
+        function renderProducts() {
+            const grid = document.getElementById('productGrid');
+            const noResults = document.getElementById('noResults');
+
+            // Filter products
+            let filtered = products.filter(p => {
+                const matchesCategory = selectedCategory === 'Todos' || p.category === selectedCategory;
+                const matchesSearch = p.name.toLowerCase().includes(searchQuery) || p.description.toLowerCase().includes(searchQuery);
+                return matchesCategory && matchesSearch;
+            });
+
+            // Sort products
+            if (filtered.length > 0) {
+                if (currentSort === 'low-high') {
+                    filtered.sort((a, b) => a.price - b.price);
+                } else if (currentSort === 'high-low') {
+                    filtered.sort((a, b) => b.price - a.price);
+                } else if (currentSort === 'name') {
+                    filtered.sort((a, b) => a.name.localeCompare(b.name));
+                } else {
+                    filtered.sort((a, b) => b.featured - a.featured);
+                }
+            }
+
+            grid.innerHTML = '';
+
+            if (filtered.length === 0) {
+                noResults.classList.remove('hidden');
+                return;
+            } else {
+                noResults.classList.add('hidden');
+            }
+
+            filtered.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'bg-[#131b2e] rounded-2xl border border-slate-800 hover:border-purple-500/50 shadow-lg hover:shadow-purple-500/10 transition-all duration-300 flex flex-col overflow-hidden group cursor-pointer';
+                card.onclick = (e) => {
+                    triggerOpeningAnimation(() => {
+                        addToCart(product.id);
+                    });
+                };
+                card.innerHTML = `
+                    <div class="relative overflow-hidden bg-slate-900 h-48">
+                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90" onerror="this.src='https://placehold.co/400x300/131b2e/a855f7?text=sg+store'">
+                        <div class="absolute inset-0 bg-gradient-to-t from-[#131b2e] via-transparent to-transparent"></div>
+                        <span class="absolute top-3 left-3 px-3 py-1 bg-purple-600/90 text-white text-[11px] font-bold rounded-full shadow-md backdrop-blur-md">
+                            ${product.badge}
+                        </span>
+                        <span class="absolute top-3 right-3 px-2.5 py-1 bg-black/60 backdrop-blur-md text-slate-300 text-[10px] font-semibold rounded-full border border-slate-700">
+                            ${product.category}
+                        </span>
+                    </div>
+                    <div class="p-5 flex-1 flex flex-col justify-between">
+                        <div>
+                            <h3 class="font-bold text-white text-base group-hover:text-purple-300 transition-colors">${product.name}</h3>
+                            <p class="text-xs text-slate-400 mt-1.5 line-clamp-2 leading-relaxed">${product.description}</p>
+                        </div>
+                        <div class="mt-4 pt-4 border-t border-slate-800/80 flex items-center justify-between">
+                            <div>
+                                <span class="text-[10px] text-slate-500 block uppercase tracking-wider">Precio sg</span>
+                                <span class="text-lg font-black text-white">$${product.price.toFixed(2)}</span>
+                            </div>
+                            <span onclick="event.stopPropagation(); triggerOpeningAnimation(() => addToCart(${product.id}));" class="px-4 py-2.5 bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold rounded-xl shadow-md shadow-purple-600/30 transition-all flex items-center gap-2">
+                                <i class="fa-solid fa-cart-plus"></i>
+                                <span>Agregar</span>
+                            </span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Opening Animation trigger function with Authentic Netflix Tudum Sound
+        function triggerOpeningAnimation(callback) {
+            const intro = document.getElementById('netflixIntro');
+            const logo = document.getElementById('netflixLogo');
+            const bar = document.getElementById('netflixBar');
+
+            playNetflixSound();
+
+            intro.classList.remove('pointer-events-none');
+            intro.classList.remove('opacity-0');
+            intro.classList.add('opacity-100');
+
+            logo.classList.add('netflix-animating');
+            bar.classList.add('netflix-bar');
+
+            setTimeout(() => {
+                intro.classList.remove('opacity-100');
+                intro.classList.add('opacity-0');
+                intro.classList.add('pointer-events-none');
+
+                logo.classList.remove('netflix-animating');
+                bar.classList.remove('netflix-bar');
+
+                if (callback) callback();
+            }, 1400);
+        }
+
+        // Authentic Netflix "Ta-Dum" Sound Effect using Web Audio API
+        function playNetflixSound() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContext) return;
+                const ctx = new AudioContext();
+
+                // First low thud note
+                const osc1 = ctx.createOscillator();
+                const gain1 = ctx.createGain();
+                osc1.type = 'sawtooth';
+                osc1.frequency.setValueAtTime(65.41, ctx.currentTime); // C2 note
+                osc1.frequency.exponentialRampToValueAtTime(32.70, ctx.currentTime + 0.35);
+
+                gain1.gain.setValueAtTime(0.6, ctx.currentTime);
+                gain1.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.45);
+
+                osc1.connect(gain1);
+                gain1.connect(ctx.destination);
+                osc1.start(ctx.currentTime);
+                osc1.stop(ctx.currentTime + 0.45);
+
+                // Second resonant high hit (Ta-DUM!)
+                setTimeout(() => {
+                    const osc2 = ctx.createOscillator();
+                    const gain2 = ctx.createGain();
+                    osc2.type = 'sine';
+                    osc2.frequency.setValueAtTime(130.81, ctx.currentTime); // C3 note
+                    osc2.frequency.exponentialRampToValueAtTime(261.63, ctx.currentTime + 0.6); // Rising pitch
+
+                    gain2.gain.setValueAtTime(0.7, ctx.currentTime);
+                    gain2.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.8);
+
+                    osc2.connect(gain2);
+                    gain2.connect(ctx.destination);
+                    osc2.start(ctx.currentTime);
+                    osc2.stop(ctx.currentTime + 0.8);
+                }, 280);
+
+            } catch (e) {}
+        }
+
+        // Sort Selector Trigger
+        function sortProducts() {
+            currentSort = document.getElementById('sortSelect').value;
+            renderProducts();
+        }
+
+        // Reset Filters
+        function resetFilters() {
+            selectedCategory = 'Todos';
+            searchQuery = '';
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchMobileInput').value = '';
+            renderCategories();
+            renderProducts();
+        }
+
+        // Cart Drawer Control
+        function toggleCartDrawer() {
+            const drawer = document.getElementById('cartDrawer');
+            const overlay = document.getElementById('cartOverlay');
+            const isOpen = drawer.classList.contains('translate-x-full');
+
+            if (isOpen) {
+                overlay.classList.remove('hidden');
+                setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                drawer.classList.remove('translate-x-full');
+            } else {
+                drawer.classList.add('translate-x-full');
+                overlay.classList.add('opacity-0');
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+            }
+            renderCartItems();
+        }
+
+        // Add Product to Cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ ...product, quantity: 1 });
+            }
+
+            updateCartBadge();
+            showToast(`¡${product.name} agregado al carrito!`);
+        }
+
+        // Update Cart Badge count
+        function updateCartBadge() {
+            const badge = document.getElementById('cartCountBadge');
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            badge.textContent = totalCount;
+            
+            badge.classList.add('scale-125');
+            setTimeout(() => badge.classList.remove('scale-125'), 200);
+        }
+
+        // Render Cart Drawer Items
+        function renderCartItems() {
+            const container = document.getElementById('cartItemsList');
+            const subtitle = document.getElementById('cartItemCountSubtitle');
+            const subtotalEl = document.getElementById('cartSubtotal');
+            const totalEl = document.getElementById('cartTotal');
+            const modalTotalEl = document.getElementById('modalTotalAmount');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+            subtitle.textContent = `${totalCount} ${totalCount === 1 ? 'producto' : 'productos'}`;
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-16">
+                        <div class="w-16 h-16 bg-[#0b0f19] text-slate-600 rounded-full flex items-center justify-center mx-auto mb-3 text-2xl border border-slate-800">
+                            <i class="fa-solid fa-cart-shopping"></i>
+                        </div>
+                        <p class="text-sm font-medium text-slate-300">Tu carrito sg está vacío</p>
+                        <p class="text-xs text-slate-500 mt-1">Explora nuestras laptops, software y streaming</p>
+                    </div>
+                `;
+                subtotalEl.textContent = '$0.00';
+                totalEl.textContent = '$0.00';
+                if(modalTotalEl) modalTotalEl.textContent = '$0.00';
+                checkoutBtn.disabled = true;
+                checkoutBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                return;
+            }
+
+            checkoutBtn.disabled = false;
+            checkoutBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+
+            container.innerHTML = '';
+            let subtotal = 0;
+
+            cart.forEach(item => {
+                subtotal += item.price * item.quantity;
+                const itemEl = document.createElement('div');
+                itemEl.className = 'flex items-center gap-4 pt-4 first:pt-0';
+                itemEl.innerHTML = `
+                    <img src="${item.image}" alt="${item.name}" class="w-16 h-16 object-cover rounded-xl bg-slate-900 border border-slate-800 flex-shrink-0">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="text-sm font-bold text-white truncate">${item.name}</h4>
+                        <p class="text-xs font-bold text-purple-400 mt-0.5">$${item.price.toFixed(2)}</p>
+                        <div class="flex items-center gap-3 mt-2">
+                            <div class="flex items-center border border-slate-800 rounded-lg overflow-hidden bg-[#0b0f19]">
+                                <button onclick="updateQuantity(${item.id}, -1)" class="px-2 py-1 text-slate-400 hover:bg-slate-800 transition-colors">-</button>
+                                <span class="px-3 text-xs font-bold text-white">${item.quantity}</span>
+                                <button onclick="updateQuantity(${item.id}, 1)" class="px-2 py-1 text-slate-400 hover:bg-slate-800 transition-colors">+</button>
+                            </div>
+                            <button onclick="removeItem(${item.id})" class="text-slate-500 hover:text-red-400 transition-colors text-xs">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(itemEl);
+            });
+
+            subtotalEl.textContent = `$${subtotal.toFixed(2)}`;
+            totalEl.textContent = `$${subtotal.toFixed(2)}`;
+            if(modalTotalEl) modalTotalEl.textContent = `$${subtotal.toFixed(2)}`;
+        }
+
+        // Update Item Quantity in Cart
+        function updateQuantity(productId, delta) {
+            const item = cart.find(i => i.id === productId);
+            if (item) {
+                item.quantity += delta;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== productId);
+                }
+                updateCartBadge();
+                renderCartItems();
+            }
+        }
+
+        // Remove Item from Cart
+        function removeItem(productId) {
+            cart = cart.filter(i => i.id !== productId);
+            updateCartBadge();
+            renderCartItems();
+        }
+
+        // Checkout Modal Control
+        function openCheckoutModal() {
+            if (cart.length === 0) return;
+            toggleCartDrawer();
+            document.getElementById('checkoutModal').classList.remove('hidden');
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkoutModal').classList.add('hidden');
+        }
+
+        // Handle Checkout Submission directly to WhatsApp with "Quiero comprar..."
+        function handleCheckoutSubmit(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('clientName').value;
+            const phone = document.getElementById('clientPhone').value;
+            const address = document.getElementById('clientAddress').value || 'No especificada (Streaming/Software)';
+            const payment = document.getElementById('clientPayment').value;
+
+            let orderSummary = '';
+            let total = 0;
+            cart.forEach(item => {
+                const sub = item.price * item.quantity;
+                total += sub;
+                orderSummary += `- ${item.quantity}x ${item.name} ($${sub.toFixed(2)})\n`;
+            });
+
+            const message = `Hola sg store, quiero comprar:\n\n${orderSummary}\n*Total:* $${total.toFixed(2)}\n*Cliente:* ${name}\n*Teléfono:* ${phone}\n*Dirección:* ${address}\n*Pago:* ${payment}`;
+            
+            const encodedMessage = encodeURIComponent(message);
+            const whatsappUrl = `https://wa.me/51962081190?text=${encodedMessage}`;
+
+            closeCheckoutModal();
+            cart = [];
+            updateCartBadge();
+            showToast('¡Redirigiendo a tu WhatsApp con el pedido listo!');
+
+            setTimeout(() => {
+                window.open(whatsappUrl, '_blank');
+            }, 800);
+        }
+
+        // Toast Notification Helper
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const msgEl = document.getElementById('toastMessage');
+            msgEl.textContent = message;
+
+            toast.classList.remove('translate-y-28', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-28', 'opacity-0');
+            }, 4500);
+        }
+    </script>
+</body>
+</html>
